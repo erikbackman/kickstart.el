@@ -1,15 +1,28 @@
+(require 'package)
+
+;; Set up package archives and make sure 'Use Package' is installed
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
+
+(package-initialize)
+
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
 ;; The Use Package package provides a macro for easy package configuration
 (require 'use-package)
+(setq use-package-always-ensure t)
 
 ;; Fonts
 ;; There are prettier ways to set font but this way is fast and doesn't cause re-rendering.
-(when (member (font-get fs :name) (font-family-list)
-	      (add-to-list 'default-frame-alist '(font . "font-size"))))
+(add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-12"))
 
 ;; Theme
-(load-theme modus-vivendi t)
+(load-theme 'wombat t)
 
 ;; Sane defaults
+(setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+
 (setq-default
  fill-column 80
  sentence-end-double-space nil
@@ -27,9 +40,9 @@
   (if (string= (buffer-name) "*scratch*")
       (ignore (bury-buffer))
     t))
-(add-hook 'kill-buffer-query-functions 'ebn/bury-scratch-buffer)
+(add-hook 'kill-buffer-query-functions 'me/bury-scratch-buffer)
 
-(defun ebn/back-to-mark ()
+(defun me/back-to-mark ()
   (interactive)
   (set-mark-command 0))
 
@@ -75,20 +88,21 @@ or the current line if there is no active region."
 ;; Built-in packages - Misc
 (use-package emacs
   ;; :map some-mode-map body
-  :map global-map
-  ("C-8" . backward-list)
-  ("C-9" . forward-list)
-  ("M-1" . delete-other-windows)
-  ("M-2" . split-window-below)
-  ("M-3" . split-window-right)
-  ("M-4" . delete-window)
-  ("s-r" . replace-string)
-  ("M-z" . zap-up-to-char)
-  ("M-o" . me/open-line-above)
-  ("C-o" . me/open-line-below)
-  ("C-k" . me/kill-dwim)
-  ("C-x k" . me/kill-current-buffer)
-  ("C-0" . me/back-to-mark))
+  :bind 
+  (:map global-map
+	("C-8" . backward-list)
+	("C-9" . forward-list)
+	("M-1" . delete-other-windows)
+	("M-2" . split-window-below)
+	("M-3" . split-window-right)
+	("M-4" . delete-window)
+	("s-r" . replace-string)
+	("M-z" . zap-up-to-char)
+	("M-o" . me/open-line-above)
+	("C-o" . me/open-line-below)
+	("C-k" . me/kill-dwim)
+	("C-x k" . me/kill-current-buffer)
+	("C-0" . me/back-to-mark)))
 
 (use-package dired
   :ensure nil
