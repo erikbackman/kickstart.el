@@ -176,7 +176,6 @@ or the current line if there is no active region."
 
 ;; External packages - editing
 (use-package multiple-cursors
-  :ensure t
   :config
   (global-set-key (kbd "M-m") 'mc/mark-all-like-this-dwim)
   (global-set-key [(super down)] 'mc/mark-next-like-this)
@@ -186,13 +185,10 @@ or the current line if there is no active region."
 	("s-," . mc/mark-all-in-region-regexp)))
 
 (use-package expand-region
-  :ensure t
-  :commands 'er/expand-region
   :bind
   ("C-<return>" . er/expand-region))
 
 (use-package paredit
-  :ensure t
   :diminish
   :hook (lisp-data-mode . enable-paredit-mode))
 
