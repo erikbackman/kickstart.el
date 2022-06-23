@@ -142,8 +142,7 @@ or the current line if there is no active region."
 	org-catch-invisible-edits 'error
 	org-ctrl-k-protect-subtree t)
   :bind (:map org-mode-map
-	      ("C-c h" . consult-org-heading))
-  :hook (org-mode . corfu-mode))
+	      ("C-c h" . consult-org-heading)))
 
 
 ;; External packages - languages
@@ -190,7 +189,7 @@ or the current line if there is no active region."
 
 (use-package paredit
   :diminish
-  :hook (lisp-data-mode . enable-paredit-mode))
+  :hook ((emacs-lisp-mode lisp-mode) . enable-paredit-mode))
 
 ;; Completion
 (use-package corfu
@@ -207,15 +206,8 @@ or the current line if there is no active region."
   (corfu-mode)
 
   :init
-  ;; Recommended according to corfu docs: Enable Corfu globally.
-  ;; This is recommended since Dabbrev can be used globally (M-/).
   ;; See also `corfu-excluded-modes'.
-  
-  ; (global-corfu-mode) ;; Uncomment this line to enable corfu globally
-       
-  ;; Add hooks to turn on corfu-mode explicitly per mode.
-  :hook ((eshell-mode . corfu-mode)
-	 (lisp-data-mode . corfu-mode)))
+  (global-corfu-mode))
 
 ;; Completion framework
 (use-package vertico
@@ -240,5 +232,4 @@ or the current line if there is no active region."
   ("C-c f" . consult-ripgrep)
   ("C-c l" . consult-line)
   ("C-c i" . consult-imenu)
-  ("C-c t" . gtags-find-tag)
   ("C-x b" . consult-buffer))
