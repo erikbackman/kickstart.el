@@ -10,6 +10,8 @@
   (package-install 'use-package))
 
 ;; The Use Package package provides a macro for easy package configuration
+;; You can read the documentation for use package directly from within emacs
+;; Use 'C-h i' to access the info system and 'm' to navigate to the use-package section
 (require 'use-package)
 (setq use-package-always-ensure t)
 
