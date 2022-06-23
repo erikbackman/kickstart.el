@@ -13,7 +13,7 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
-;;; Looks
+;;; LOOKS
 ;;; --------------------------------------------------------------------------
 
 ;; Fonts
@@ -39,7 +39,7 @@
 (when (string-greaterp emacs-version "28")
   (repeat-mode 1))
 
-;;; Custom functions
+;;; CUSTOM FUNCTIONS
 ;;; --------------------------------------------------------------------------
 
 ;; Never kill scratch-buffer
@@ -55,23 +55,12 @@
   (set-mark-command 0))
 
 (defun me/kill-dwim ()
-  "Make C-k act as C-w (`kill-region') when a region is selected."
+  "Run the command `kill-region' on the current region
+or `kill-line' if there is no active region'"
   (interactive)
   (if (region-active-p)
       (kill-region (region-beginning) (region-end) nil)
     (kill-line)))
-
-(defun me/kill-current-buffer ()
-  "Kill current buffer."
-  (interactive)
-  (kill-buffer (current-buffer)))
-
-(defun me/dired-up-directory ()
-  "Move up directory and cleanup previously used buffer."
-  (interactive)
-  (let ((cb (current-buffer)))
-    (progn (dired-up-directory)
-	   (kill-buffer cb))))
 
 (defun me/copy-dwim ()
   "Run the command `kill-ring-save' on the current region
@@ -80,6 +69,13 @@ or the current line if there is no active region."
   (if (region-active-p)
       (kill-ring-save nil nil t)
     (kill-ring-save (point-at-bol) (point-at-eol))))
+
+(defun me/dired-up-directory ()
+  "Move up directory and cleanup previously used buffer."
+  (interactive)
+  (let ((cb (current-buffer)))
+    (progn (dired-up-directory)
+	   (kill-buffer cb))))
 
 (defun me/open-line-below ()
   "Open a newline below current line."
@@ -93,7 +89,6 @@ or the current line if there is no active region."
   (previous-line)
   (move-end-of-line nil)
   (newline-and-indent))
-
 
 ;;; BUILT-IN PACKAGES
 ;;; --------------------------------------------------------------------------
@@ -111,10 +106,10 @@ or the current line if there is no active region."
 	("s-r" . replace-string)
 	("M-z" . zap-up-to-char)
 	("C-x C-b" . ibuffer-other-window)
+	("C-x k" . kill-current-buffer)
 	("M-o" . me/open-line-above)
 	("C-o" . me/open-line-below)
 	("C-k" . me/kill-dwim)
-	("C-x k" . me/kill-current-buffer)
 	("C-0" . me/back-to-mark)))
 
 ;; Emacs Directory Editor
@@ -209,7 +204,7 @@ or the current line if there is no active region."
 ;; Completion
 ;; --------------------------------------------------------------------------
 
-;;; See: https://github.com/minad/corfu
+;; See: https://github.com/minad/corfu
 (use-package corfu
   :defer t
   :custom
