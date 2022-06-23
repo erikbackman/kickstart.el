@@ -181,11 +181,14 @@ or the current line if there is no active region."
   (eglot-confirm-server-initiated-edits nil)
   (eldoc-idle-delay 1)
   (eldoc-echo-area-display-truncation-message nil)
-  :hook
+  
   ;; Adding hooks to automatically start an eglot (LSP) session when a buffer is visited.
   ;; See https://github.com/joaotavora/eglot
+  
+  ; :hook
   ; (haskell-mode . eglot-ensure) 
   ; (rust-mode . eglot-ensure)
+  
   :bind (:map eglot-mode-map
 	      ("C-c C-a" . eglot-code-actions)
 	      ("C-c C-f" . eglot-format-buffer)))
