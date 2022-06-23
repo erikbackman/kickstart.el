@@ -26,14 +26,18 @@
 (setq-default
  fill-column 80
  sentence-end-double-space nil
- kill-whole-line t
+ kill-whole-line nil
  lisp-backquote-indentation nil
  blink-cursor-blinks 1
  fast-but-imprecise-scrolling t
  auto-save-interval 60
  kill-do-not-save-duplicates t)
 
-;; Custom functions
+(when (string-greaterp emacs-version "28")
+  (repeat-mode 1))
+
+;;; Custom functions
+;;; --------------------------------------------------------------------------
 
 ;; Never kill scratch-buffer
 (defun me/bury-scratch-buffer ()
@@ -43,10 +47,12 @@
 (add-hook 'kill-buffer-query-functions 'me/bury-scratch-buffer)
 
 (defun me/back-to-mark ()
+  "Jump back to previous mark i.e after searching."
   (interactive)
   (set-mark-command 0))
 
 (defun me/kill-dwim ()
+  "Make C-k act as C-w (`kill-region') when a region is selected."
   (interactive)
   (if (region-active-p)
       (kill-region (region-beginning) (region-end) nil)
@@ -85,7 +91,10 @@ or the current line if there is no active region."
   (move-end-of-line nil)
   (newline-and-indent))
 
-;; Built-in packages - Misc
+
+;;; BUILT-IN PACKAGES
+;;; --------------------------------------------------------------------------
+
 (use-package emacs
   ;; :map some-mode-map body
   :bind 
@@ -98,12 +107,15 @@ or the current line if there is no active region."
 	("M-4" . delete-window)
 	("s-r" . replace-string)
 	("M-z" . zap-up-to-char)
+	("C-x C-b" . ibuffer-other-window)
 	("M-o" . me/open-line-above)
 	("C-o" . me/open-line-below)
 	("C-k" . me/kill-dwim)
 	("C-x k" . me/kill-current-buffer)
 	("C-0" . me/back-to-mark)))
 
+;; Emacs Directory Editor
+;; --------------------------------------------------------------------------
 (use-package dired
   :ensure nil
   :config
@@ -111,18 +123,18 @@ or the current line if there is no active region."
 	dired-recursive-deletes t
 	dired-dwim-target t
 	delete-by-moving-to-trash t)
-  :bind*			    
+  :bind
   (:map dired-mode-map
 	("-" . me/dired-up-directory)
 	("e" . wdired-change-to-wdired-mode)))
 
-;; Built-in packages - Languages
+;; LANGUAGES
+;; --------------------------------------------------------------------------
 (use-package sh-mode
   :ensure nil
   :commands shell-script-mode
   :bind (:map sh-mode-map ("C-x C-e" . sh-execute-region)))
 
-;; External packages - misc
 (use-package org
   :commands (org-agenda
 	     org-capture)
@@ -145,7 +157,8 @@ or the current line if there is no active region."
 	      ("C-c h" . consult-org-heading)))
 
 
-;; External packages - languages
+;;; EXTERNAL PACKAGES
+;;; --------------------------------------------------------------------------
 (use-package markdown-mode
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode))
@@ -155,13 +168,8 @@ or the current line if there is no active region."
   (markdown-enable-highlighting-syntax t))
 
 ;; LSP
+;; --------------------------------------------------------------------------
 (use-package eglot
-  :defer t
-  :hook
-  (haskell-mode . eglot-ensure)
-  (c-mode . eglot-ensure)
-  (python-mode . eglot-ensure)
-  (LaTeX-mode . eglot-ensure)
   :custom
   (eglot-autoshutdown t)
   (eglot-autoreconnect nil)
@@ -173,7 +181,8 @@ or the current line if there is no active region."
 	      ("C-c C-a" . eglot-code-actions)
 	      ("C-c C-f" . eglot-format-buffer)))
 
-;; External packages - editing
+;; Editing
+;; --------------------------------------------------------------------------
 (use-package multiple-cursors
   :config
   (global-set-key (kbd "M-m") 'mc/mark-all-like-this-dwim)
@@ -183,15 +192,21 @@ or the current line if there is no active region."
 	("s-<down>" . mc/mark-next-like-this)
 	("s-," . mc/mark-all-in-region-regexp)))
 
-(use-package expand-region
-  :bind
-  ("C-<return>" . er/expand-region))
+;;; Expand region lets you incrementally expand a region
+;;; See: https://github.com/magnars/expand-region.el
+;; (use-package expand-region
+;;   :bind
+;;   ("C-<return>" . er/expand-region))
 
+;;; Enables structural editing for LISP.
 (use-package paredit
   :diminish
   :hook ((emacs-lisp-mode lisp-mode) . enable-paredit-mode))
 
 ;; Completion
+;; --------------------------------------------------------------------------
+
+;;; See: https://github.com/minad/corfu
 (use-package corfu
   :defer t
   :custom
@@ -202,24 +217,21 @@ or the current line if there is no active region."
   (corfu-quit-at-boundary t)
   (corfu-quit-no-match t)
   (corfu-echo-documentation nil)
-  :config
-  (corfu-mode)
-
   :init
-  ;; See also `corfu-excluded-modes'.
   (global-corfu-mode))
 
 ;; Completion framework
+;; See: https://github.com/minad/vertico
 (use-package vertico
   :config
   (vertico-mode))
 
 ;; Fuzzy matching
+;; See: https://github.com/minad/orderless
 (use-package orderless
   :init
-  (setq completion-styles '(orderless)
+  (setq completion-styles '(orderless flex)
 	completion-category-defaults nil
-	orderless-skip-highlighting t
 	completion-category-overrides '((file (styles partial-completion)))))
 
 ;; Minibuffer completion
