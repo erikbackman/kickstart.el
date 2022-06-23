@@ -183,7 +183,6 @@ or the current line if there is no active region."
 ;; --------------------------------------------------------------------------
 (use-package multiple-cursors
   :config
-  (global-set-key (kbd "M-m") 'mc/mark-all-like-this-dwim)
   (global-set-key [(super down)] 'mc/mark-next-like-this)
   :bind
   (:map global-map
