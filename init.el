@@ -212,7 +212,6 @@ or the current line if there is no active region."
 
 ;; See: https://github.com/minad/corfu
 (use-package corfu
-  :defer t
   :custom
   (corfu-auto-delay 0.2)
   (corfu-cycle t)
