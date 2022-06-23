@@ -13,6 +13,9 @@
 (require 'use-package)
 (setq use-package-always-ensure t)
 
+;;; Looks
+;;; --------------------------------------------------------------------------
+
 ;; Fonts
 ;; There are prettier ways to set font but this way is fast and doesn't cause re-rendering.
 (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-12"))
