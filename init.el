@@ -200,6 +200,7 @@ or the current line if there is no active region."
 ;;   ("C-<return>" . er/expand-region))
 
 ;;; Enables structural editing for LISP.
+;;; See: http://danmidwood.com/content/2014/11/21/animated-paredit.html
 (use-package paredit
   :diminish
   :hook ((emacs-lisp-mode lisp-mode) . enable-paredit-mode))
