@@ -9,9 +9,15 @@
   (package-refresh-contents)
   (package-install 'use-package))
 
-;; The Use Package package provides a macro for easy package configuration
-;; You can read the documentation for use package directly from within emacs
-;; Use 'C-h i' to access the info system and 'm' to navigate to the use-package section
+;; README!
+;;
+;; The 'use-package' package provides a macro for easy package configuration and
+;; deferred loading.
+;;
+;; I highly recommend you read its documentation as it will explain what keys
+;; such as :init, :config, :custom will expand to. You can read the
+;; documentation for use package directly from within emacs Use 'C-h i' to
+;; access the info system and 'm' to navigate to the use-package section.
 (require 'use-package)
 (setq use-package-always-ensure t)
 
@@ -168,7 +174,7 @@ or the current line if there is no active region."
   :commands (markdown-mode gfm-mode)
   :mode (("README\\.md\\'" . gfm-mode))
   :init
-  (setq markdown-command "multimarkdown") ;; Requires multimarkdown to be installed on your system
+  (setq markdown-command "multimarkdown") ; Requires multimarkdown to be installed on your system
   :custom
   (markdown-enable-highlighting-syntax t))
 
