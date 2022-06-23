@@ -15,8 +15,8 @@
 ;; deferred loading.
 ;;
 ;; I highly recommend you read its documentation as it will explain what keys
-;; such as :init, :config, :custom will expand to. You can read the
-;; documentation for use package directly from within emacs Use 'C-h i' to
+;; such as :init, :config and :custom will expand to. You can read the
+;; documentation for use package directly from within emacs! Use 'C-h i' to
 ;; access the info system and 'm' to navigate to the use-package section.
 (require 'use-package)
 (setq use-package-always-ensure t)
@@ -50,6 +50,10 @@
 (show-paren-mode)
 
 ;;; CUSTOM FUNCTIONS
+;;; Here are some custom functions slightly alter some emacs Emacs built-in
+;;; functions (for the better in my opinion) by making them more context aware.
+;;; If you decide you do not want to use them then remember to delete their key mappings
+;;; in the (use-package emacs..) section.
 ;;; --------------------------------------------------------------------------
 
 ;; Never kill scratch-buffer
