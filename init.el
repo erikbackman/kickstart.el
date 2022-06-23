@@ -96,10 +96,11 @@ or the current line if there is no active region."
 ;;; --------------------------------------------------------------------------
 
 (use-package emacs
-  ;; :map some-mode-map body
   :bind
   ;; See: https://www.gnu.org/software/emacs/manual/html_node/elisp/Dotted-Pair-Notation.html
   ;; for information on "dotted pair notation" i.e (foo . bar)
+  ;; or press 'C-h i' (to access the info-system) then use 'm' to navigate to:
+  ;; File: Elisp > Dotted Pair Notation
   (:map global-map
 	("C-8" . backward-list)
 	("C-9" . forward-list)
