@@ -39,6 +39,8 @@
 (when (string-greaterp emacs-version "28")
   (repeat-mode 1))
 
+(show-paren-mode)
+
 ;;; CUSTOM FUNCTIONS
 ;;; --------------------------------------------------------------------------
 
