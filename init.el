@@ -116,6 +116,10 @@ or the current line if there is no active region."
 ;;; BUILT-IN PACKAGES
 ;;; --------------------------------------------------------------------------
 
+;; Note that use-package is NOT a package manager but simply uses the one
+;; provided by package.el when told to ensure that packages are installed. Here
+;; we simply use the use-package macro to configure built-in packages in a
+;; declerative manner.
 (use-package emacs
   :bind
   ;; See: https://www.gnu.org/software/emacs/manual/html_node/elisp/Dotted-Pair-Notation.html
