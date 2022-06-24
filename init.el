@@ -44,7 +44,7 @@
  auto-save-interval 60
  kill-do-not-save-duplicates t)
 
-(when (string-greaterp emacs-version "28")
+(when (version<= "28" emacs-version)
   (repeat-mode 1))
 
 (show-paren-mode)
