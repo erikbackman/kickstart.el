@@ -17,7 +17,7 @@ delete anything you don't want.*
 Here's a community driven list of useful Emacs packages, utilities and libraries
 that you might want to check out.
 
-[[https://github.com/emacs-tw/awesome-emacs][https://github.com/emacs-tw/awesome-emacs]]
+[[https://github.com/emacs-tw/awesome-emacs]]
 
 
 
