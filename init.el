@@ -48,6 +48,7 @@
   (repeat-mode 1))
 
 (show-paren-mode)
+;(save-place-mode) ; uncomment this if you want Emacs to remember your position in files.
 
 ;;; CUSTOM FUNCTIONS
 ;;; Here are some custom functions I find useful.
@@ -220,7 +221,6 @@ or the current line if there is no active region."
 ;; --------------------------------------------------------------------------
 (use-package multiple-cursors
   :config
-  (global-set-key [(super down)] 'mc/mark-next-like-this)
   :bind
   (:map global-map
 	("s-<down>" . mc/mark-next-like-this)
