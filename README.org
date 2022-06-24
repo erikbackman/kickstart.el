@@ -1,1 +1,24 @@
+* Install
+
 Just clone into =~/.emacs.d/=
+
+* About
+
+This configuration is meant to be a good starting point for people new to Emacs, a
+single file (plus the early-init.file).
+
+It comes with completion and an lsp-client which you will have to enable for
+your choice of languages.
+
+I've added some custom functionality and keybinds that I personally like but
+mainly it serves as examples on how to do things *and you are encouraged to
+delete anything you don't want.*
+
+Here's a community driven list of useful Emacs packages, utilities and libraries
+that you might want to check out.
+
+[[https://github.com/emacs-tw/awesome-emacs][https://github.com/emacs-tw/awesome-emacs]]
+
+
+
+
