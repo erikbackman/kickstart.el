@@ -50,39 +50,48 @@
 (show-paren-mode)
 
 ;;; CUSTOM FUNCTIONS
-;;; Here are some custom functions slightly alter some emacs Emacs built-in
-;;; functions (for the better in my opinion) by making them more context aware.
+;;; Here are some custom functions I find useful.
 ;;; If you decide you do not want to use them then remember to delete their key mappings
 ;;; in the (use-package emacs..) section.
 ;;; --------------------------------------------------------------------------
+;;;
+;;; By default emacs uses 'C-k' to kill (cut) a line and 'C-w' to kill (cut)
+;;; current region. Similarly 'M-w' will copy active region. I find that having
+;;; two keybinds to do similar operations annoying and so `me/kill-dwim',
+;;; `me/copy-dwim' bundles these two opterations into one picks the correct one.
+;;; C-w is still useful to kill between point and mark.
+(defun me/if-active-region-else (then else)
+  (if (region-active-p)
+      (funcall then (region-beginning) (region-end))
+    (funcall else)))
 
-;; Never kill scratch-buffer
+(defun me/kill-dwim ()
+  "Run the command `kill-region' on the current region
+or `kill-line' if there is no active region'"
+  (interactive)
+  (me/if-active-region-else #'kill-region #'kill-line))
+
+(defun me/copy-dwim ()
+  "Run the command `kill-ring-save' on the current region
+or the current line if there is no active region."
+  (interactive)
+  (me/if-active-region-else
+   #'kill-ring-save
+   (lambda () (kill-ring-save (point-at-bol) (point-at-eol) nil))))
+;; --------------------------------------------------------------------------
+
+;; Never kill scratch-buffer.
 (defun me/bury-scratch-buffer ()
   (if (string= (buffer-name) "*scratch*")
       (ignore (bury-buffer))
     t))
 (add-hook 'kill-buffer-query-functions 'me/bury-scratch-buffer)
 
+;; You can achieve what this function does by pressing C-u C-SPC
 (defun me/back-to-mark ()
   "Jump back to previous mark i.e after searching."
   (interactive)
   (set-mark-command 0))
-
-(defun me/kill-dwim ()
-  "Run the command `kill-region' on the current region
-or `kill-line' if there is no active region'"
-  (interactive)
-  (if (region-active-p)
-      (kill-region (region-beginning) (region-end) nil)
-    (kill-line)))
-
-(defun me/copy-dwim ()
-  "Run the command `kill-ring-save' on the current region
-or the current line if there is no active region."
-  (interactive)
-  (if (region-active-p)
-      (kill-ring-save nil nil t)
-    (kill-ring-save (point-at-bol) (point-at-eol))))
 
 (defun me/dired-up-directory ()
   "Move up directory and cleanup previously used buffer."
@@ -127,10 +136,10 @@ or the current line if there is no active region."
 	("M-o" . me/open-line-above)
 	("C-o" . me/open-line-below)
 	("C-k" . me/kill-dwim)
+	("M-w" . me/copy-dwim)
 	("C-0" . me/back-to-mark)))
 
-;; Emacs Directory Editor
-;; --------------------------------------------------------------------------
+;; Emacs Directory Editor 'C-x d'
 (use-package dired
   :ensure nil
   :config
