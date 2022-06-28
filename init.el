@@ -61,24 +61,21 @@
 ;;; two keybinds to do similar operations annoying and so `me/kill-dwim',
 ;;; `me/copy-dwim' bundles these two opterations into one picks the correct one.
 ;;; C-w is still useful to kill between point and mark.
-(defun me/if-active-region-else (then else)
-  (if (region-active-p)
-      (funcall then (region-beginning) (region-end))
-    (funcall else)))
-
 (defun me/kill-dwim ()
   "Run the command `kill-region' on the current region
 or `kill-line' if there is no active region'"
   (interactive)
-  (me/if-active-region-else #'kill-region #'kill-line))
+  (if (region-active-p)
+      (kill-region (region-beginning) (region-end) nil)
+    (kill-line)))
 
 (defun me/copy-dwim ()
   "Run the command `kill-ring-save' on the current region
 or the current line if there is no active region."
   (interactive)
-  (me/if-active-region-else
-   #'kill-ring-save
-   (lambda () (kill-ring-save (point-at-bol) (point-at-eol) nil))))
+  (if (region-active-p)
+      (kill-ring-save nil nil t)
+    (kill-ring-save (point-at-bol) (point-at-eol))))
 ;; --------------------------------------------------------------------------
 
 ;; Never kill scratch-buffer.
