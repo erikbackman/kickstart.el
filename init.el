@@ -42,11 +42,14 @@
  blink-cursor-blinks 1
  fast-but-imprecise-scrolling t
  auto-save-interval 60
- kill-do-not-save-duplicates t)
+ kill-do-not-save-duplicates t
+ bidi-paragraph-direction 'left-to-right
+ bidi-inhibit-bpa t)
 
 (when (version<= "28" emacs-version)
   (repeat-mode 1))
 
+(global-so-long-mode 1)
 (show-paren-mode)
 ;(save-place-mode) ; uncomment this if you want Emacs to remember your position in files.
 
