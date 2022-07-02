@@ -50,7 +50,7 @@
   (repeat-mode 1))
 
 (global-so-long-mode 1)
-(show-paren-mode)
+(show-paren-mode 1)
 ;(save-place-mode) ; uncomment this if you want Emacs to remember your position in files.
 
 ;;; CUSTOM FUNCTIONS
@@ -62,7 +62,7 @@
 ;;; By default emacs uses 'C-k' to kill (cut) a line and 'C-w' to kill (cut)
 ;;; current region. Similarly 'M-w' will copy active region. I find that having
 ;;; two keybinds to do similar operations annoying and so `me/kill-dwim',
-;;; `me/copy-dwim' bundles these two opterations into one picks the correct one.
+;;; `me/copy-dwim' bundles these two opterations into one that picks the correct one.
 ;;; C-w is still useful to kill between point and mark.
 (defun me/kill-dwim ()
   "Run the command `kill-region' on the current region
@@ -205,14 +205,13 @@ or the current line if there is no active region."
   (eglot-confirm-server-initiated-edits nil)
   (eldoc-idle-delay 1)
   (eldoc-echo-area-display-truncation-message nil)
-  
-  ;; Adding hooks to automatically start an eglot (LSP) session when a buffer is visited.
+
+  ;; This is how you would add hooks to automatically start an eglot (LSP) session for certain modes.
   ;; See https://github.com/joaotavora/eglot
-  
   ; :hook
-  ; (haskell-mode . eglot-ensure) 
+  ; (haskell-mode . eglot-ensure)
   ; (rust-mode . eglot-ensure)
-  
+
   :bind (:map eglot-mode-map
 	      ("C-c C-a" . eglot-code-actions)
 	      ("C-c C-f" . eglot-format-buffer)))
@@ -233,7 +232,9 @@ or the current line if there is no active region."
 ;;   ("C-<return>" . er/expand-region))
 
 ;;; Enables structural editing for LISP.
-;;; See: http://danmidwood.com/content/2014/11/21/animated-paredit.html
+;;; See:
+;;; http://danmidwood.com/content/2014/11/21/animated-paredit.html
+;;; https://github.com/joelittlejohn/paredit-cheatsheet
 (use-package paredit
   :diminish
   :hook ((emacs-lisp-mode lisp-mode) . enable-paredit-mode))
