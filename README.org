@@ -14,11 +14,14 @@ I've added some custom functionality and keybinds that I personally like but
 mainly they serve as examples on how to do certain things *and you are encouraged to
 delete anything you don't want.*
 
-Here's a community driven list of useful Emacs packages, utilities and libraries
-that you might want to check out.
+* Resources
 
+Here's a community driven list of useful Emacs packages, utilities and libraries
+that you might want to check out:
 [[https://github.com/emacs-tw/awesome-emacs]]
 
+Here's a similar list for learning more about elisp:
+https://github.com/p3r7/awesome-elisp
 
 
 
