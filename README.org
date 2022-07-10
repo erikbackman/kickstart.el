@@ -15,13 +15,9 @@ mainly they serve as examples on how to do certain things *and you are encourage
 delete anything you don't want.*
 
 * Resources
+** Emacs packages, utilities and libraries
+- [[https://github.com/emacs-tw/awesome-emacs][awesome-emacs]]
 
-Here's a community driven list of useful Emacs packages, utilities and libraries
-that you might want to check out:
-[[https://github.com/emacs-tw/awesome-emacs]]
-
-Here's a similar list for learning more about elisp:
-https://github.com/p3r7/awesome-elisp
-
-
-
+** Learn Elisp:
+- [[https://github.com/p3r7/awesome-elisp][awesome-elisp]]
+- [[https://www.youtube.com/watch?v=NocDm4zzToo][Gavin Freeborn: LEARN EMACS LISP]]
