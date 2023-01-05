@@ -49,37 +49,13 @@
 (when (version<= "28" emacs-version)
   (repeat-mode 1))
 
-(global-so-long-mode 1)
+(unless (version<= "29.0.60" emacs-version)
+  (global-so-long-mode 1))
+
 (show-paren-mode 1)
 ;(save-place-mode) ; uncomment this if you want Emacs to remember your position in files.
 
 ;;; CUSTOM FUNCTIONS
-;;; Here are some custom functions I find useful.
-;;; If you decide you do not want to use them then remember to delete their key mappings
-;;; in the (use-package emacs..) section.
-;;; --------------------------------------------------------------------------
-;;;
-;;; By default emacs uses 'C-k' to kill (cut) a line and 'C-w' to kill (cut)
-;;; current region. Similarly 'M-w' will copy active region. I find that having
-;;; two keybinds to do similar operations annoying and so `me/kill-dwim',
-;;; `me/copy-dwim' bundles these two opterations into one that picks the correct one.
-;;; C-w is still useful to kill between point and mark.
-(defun me/kill-dwim ()
-  "Run the command `kill-region' on the current region
-or `kill-line' if there is no active region'"
-  (interactive)
-  (if (region-active-p)
-      (kill-region (region-beginning) (region-end) nil)
-    (kill-line)))
-
-(defun me/copy-dwim ()
-  "Run the command `kill-ring-save' on the current region
-or the current line if there is no active region."
-  (interactive)
-  (if (region-active-p)
-      (kill-ring-save nil nil t)
-    (kill-ring-save (point-at-bol) (point-at-eol))))
-;; --------------------------------------------------------------------------
 
 ;; Never kill scratch-buffer.
 (defun me/bury-scratch-buffer ()
@@ -100,19 +76,6 @@ or the current line if there is no active region."
   (let ((cb (current-buffer)))
     (progn (dired-up-directory)
 	   (kill-buffer cb))))
-
-(defun me/open-line-below ()
-  "Open a newline below current line."
-  (interactive)
-  (move-end-of-line nil)
-  (newline-and-indent))
-
-(defun me/open-line-above ()
-  "Open a newline above current line."
-  (interactive)
-  (previous-line)
-  (move-end-of-line nil)
-  (newline-and-indent))
 
 ;;; BUILT-IN PACKAGES
 ;;; --------------------------------------------------------------------------
@@ -138,10 +101,6 @@ or the current line if there is no active region."
 	("M-z" . zap-up-to-char)
 	("C-x C-b" . ibuffer-other-window)
 	("C-x k" . kill-current-buffer)
-	("M-o" . me/open-line-above)
-	("C-o" . me/open-line-below)
-	("C-k" . me/kill-dwim)
-	("M-w" . me/copy-dwim)
 	("C-0" . me/back-to-mark)))
 
 ;; Emacs Directory Editor 'C-x d'
@@ -156,6 +115,22 @@ or the current line if there is no active region."
   (:map dired-mode-map
 	("-" . me/dired-up-directory)
 	("e" . wdired-change-to-wdired-mode)))
+
+(use-package eshell
+  :ensure nil
+  :commands (eshell)
+  :requires (esh-mode)
+  :config
+  (defun my/eshell-clear ()
+    (interactive)
+    (eshell/clear-scrollback)
+    (eshell-emit-prompt))
+
+  (defun eshell/open (file) (find-file file))
+  :bind
+  ("C-c t e" . eshell)
+  (:map eshell-mode-map
+	("C-l" . my/eshell-clear)))
 
 ;; LANGUAGES
 ;; --------------------------------------------------------------------------
@@ -218,12 +193,6 @@ or the current line if there is no active region."
 
 ;; Editing
 ;; --------------------------------------------------------------------------
-(use-package multiple-cursors
-  :config
-  :bind
-  (:map global-map
-	("s-<down>" . mc/mark-next-like-this)
-	("s-," . mc/mark-all-in-region-regexp)))
 
 ;;; Expand region lets you incrementally expand a region
 ;;; See: https://github.com/magnars/expand-region.el
