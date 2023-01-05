@@ -128,7 +128,6 @@
 
   (defun eshell/open (file) (find-file file))
   :bind
-  ("C-c t e" . eshell)
   (:map eshell-mode-map
 	("C-l" . my/eshell-clear)))
 
