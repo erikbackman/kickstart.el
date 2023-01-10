@@ -119,8 +119,8 @@
 (use-package eshell
   :ensure nil
   :commands (eshell)
-  :requires (esh-mode)
   :config
+  (require 'esh-mode)
   (defun my/eshell-clear ()
     (interactive)
     (eshell/clear-scrollback)
