@@ -58,7 +58,7 @@
 ;; to select the next window you can simply keep pressing 'o'.
 ;; Fore more information use M-x describe-package
 ;;
-;; 'Use-package' also supports setting up custom repeat keymaps. See the use-package manaual or evaluate:
+;; 'Use-package' also supports setting up custom repeat keymaps. See the 'use-package' manaual:
 ;; use-package > Configuring Packages > Key bindings > Binding to repeat-maps
 ;; To go back to the top node from within an info-buffer, press 'd'.
 (when (version<= "28" emacs-version)
