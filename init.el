@@ -1,10 +1,15 @@
 (require 'package)
 
-;; Set up package archives and make sure 'Use Package' is installed
+;; Set up package archives.
+;; Whenever you want to update your packages use 'M-x package-refresh-contents' followed by
+;; 'M-x package-update' or 'M-x package-update-all'.
+;;
+;; 'M-x' means holding 'Alt' (or Command on MacOS) and pressing 'x'
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
-
 (package-initialize)
 
+;; If you are using Emacs version 29.60.0 or higher then 'use-package'
+;; is built-in and you don't need the following lines:
 (unless (package-installed-p 'use-package)
   (package-refresh-contents)
   (package-install 'use-package))
@@ -18,6 +23,7 @@
 ;; such as :init, :config and :custom will expand to. You can read the
 ;; documentation for use package directly from within emacs! Use 'C-h i' to
 ;; access the info system and 'm' to navigate to the use-package section.
+;; I suggest you try this now as I will keep referring to the manual throughout this file.
 (require 'use-package)
 (setq use-package-always-ensure t)
 
@@ -30,6 +36,7 @@
 
 ;; Theme
 (load-theme 'wombat t)
+;; You can use M-x consult-theme to try other themes.
 
 ;; Sane defaults
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
@@ -46,17 +53,26 @@
  bidi-paragraph-direction 'left-to-right
  bidi-inhibit-bpa t)
 
+;; 'repeat' sets up keymaps for repeating various commands without having to press
+;; the entire key sequence again. For example when cycling windows using 'C-x o',
+;; to select the next window you can simply keep pressing 'o'.
+;; Fore more information use M-x describe-package
+;;
+;; 'Use-package' also supports setting up custom repeat keymaps. See the use-package manaual or evaluate:
+;; use-package > Configuring Packages > Key bindings > Binding to repeat-maps
+;; To go back to the top node from within an info-buffer, press 'd'.
 (when (version<= "28" emacs-version)
   (repeat-mode 1))
 
+;; This should not be needed for Emacs version 29.0.60 and higher.
 (unless (version<= "29.0.60" emacs-version)
   (global-so-long-mode 1))
 
+;; Highlight matching parentheses.
 (show-paren-mode 1)
-;(save-place-mode) ; uncomment this if you want Emacs to remember your position in files.
 
 ;;; CUSTOM FUNCTIONS
-
+;;; --------------------------------------------------------------------------
 ;; Never kill scratch-buffer.
 (defun me/bury-scratch-buffer ()
   (if (string= (buffer-name) "*scratch*")
@@ -172,6 +188,9 @@
 
 ;; LSP
 ;; --------------------------------------------------------------------------
+
+;; Eglot is an LSP client. See https://github.com/joaotavora/eglot for more information.
+;; Note that Eglot is built-in with Emacs version 29.0.60.
 (use-package eglot
   :custom
   (eglot-autoshutdown t)
@@ -180,11 +199,11 @@
   (eldoc-idle-delay 1)
   (eldoc-echo-area-display-truncation-message nil)
 
-  ;; This is how you would add hooks to automatically start an eglot (LSP) session for certain modes.
-  ;; See https://github.com/joaotavora/eglot
-  ; :hook
-  ; (haskell-mode . eglot-ensure)
-  ; (rust-mode . eglot-ensure)
+  ;; To set up hooks to start an LSP-session automatically for certain modes you can use the ':hook' keyword followed by
+  ;; dotted pairs of the form (major-mode . eglot-ensure), for example:
+  ;; :hook
+  ;; (haskell-mode . eglot-ensure)
+  ;; (rust-mode . eglot-ensure)
 
   :bind (:map eglot-mode-map
 	      ("C-c C-a" . eglot-code-actions)
@@ -192,12 +211,6 @@
 
 ;; Editing
 ;; --------------------------------------------------------------------------
-
-;;; Expand region lets you incrementally expand a region
-;;; See: https://github.com/magnars/expand-region.el
-;; (use-package expand-region
-;;   :bind
-;;   ("C-<return>" . er/expand-region))
 
 ;;; Enables structural editing for LISP.
 ;;; See:
@@ -210,6 +223,7 @@
 ;; Completion
 ;; --------------------------------------------------------------------------
 
+;; Corfu: Enhances completion at point with a small completion popup.
 ;; See: https://github.com/minad/corfu
 (use-package corfu
   :custom
@@ -223,13 +237,14 @@
   :init
   (global-corfu-mode))
 
-;; Completion framework
+;; Vertico: Provides a performant and minimalistic vertical completion UI based on the default completion system.
 ;; See: https://github.com/minad/vertico
 (use-package vertico
   :config
   (vertico-mode))
 
 ;; Fuzzy matching
+;; Orderless: Emacs completion style that matches multiple regexps in any order
 ;; See: https://github.com/minad/orderless
 (use-package orderless
   :init
@@ -238,6 +253,8 @@
 	completion-category-overrides '((file (styles partial-completion)))))
 
 ;; Minibuffer completion
+;; Consult: Provides search and navigation commands.
+;; See: https://github.com/minad/consult
 (use-package consult
   :config
   (setq consult-preview-key nil)
