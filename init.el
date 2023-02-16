@@ -4,7 +4,7 @@
 ;; Whenever you want to update your packages use 'M-x package-refresh-contents' followed by
 ;; 'M-x package-update' or 'M-x package-update-all'.
 ;;
-;; 'M-x' means holding 'Alt' (or Command on MacOS) and pressing 'x'
+;; 'M-x' (Meta-x) means holding 'Alt' (or Command on MacOS) and pressing 'x'
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
@@ -31,7 +31,7 @@
 ;;; --------------------------------------------------------------------------
 
 ;; Fonts
-;; There are prettier ways to set font but this way is fast and doesn't cause re-rendering.
+;; There are prettier ways to set font but this is fast and doesn't cause re-rendering.
 (add-to-list 'default-frame-alist '(font . "DejaVu Sans Mono-12"))
 
 ;; Theme
