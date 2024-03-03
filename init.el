@@ -1,10 +1,6 @@
 (require 'package)
 
 ;; Set up package archives.
-;; Whenever you want to update your packages use 'M-x package-refresh-contents' followed by
-;; 'M-x package-update' or 'M-x package-update-all'.
-;;
-;; 'M-x' (Meta-x) means holding 'Alt' (or Command on MacOS) and pressing 'x'
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
@@ -24,7 +20,7 @@
 ;; documentation for use package directly from within emacs! Use 'C-h i' to
 ;; access the info system and 'm' to navigate to the use-package section.
 ;; I suggest you try this now as I will keep referring to the manual throughout this file.
-(require 'use-package)
+(setq package-native-compile t)
 (setq use-package-always-ensure t)
 
 ;;; LOOKS
@@ -38,20 +34,21 @@
 (load-theme 'wombat t)
 ;; You can use M-x consult-theme to try other themes.
 
-;; Sane defaults
+;; Don't write custom settings to this file (when using M-x customize).
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
 
-(setq-default
- fill-column 80
- sentence-end-double-space nil
- kill-whole-line nil
- lisp-backquote-indentation nil
- blink-cursor-blinks 1
- fast-but-imprecise-scrolling t
- auto-save-interval 60
- kill-do-not-save-duplicates t
- bidi-paragraph-direction 'left-to-right
- bidi-inhibit-bpa t)
+;; Some sane defaults
+(setq dired-dwim-target t) ; Default other dired window when copying/moving files.
+(setq dired-listing-switches "-alh")
+;; Don't keep dired buffers around.
+(setq dired-kill-when-opening-new-dired-buffer t)
+
+;; Backups
+(setq backup-directory-alist
+      `((".*" . ,temporary-file-directory)))
+(setq auto-save-file-name-transforms
+      `((".*" ,temporary-file-directory t)))
+
 
 ;; 'repeat' sets up keymaps for repeating various commands without having to press
 ;; the entire key sequence again. For example when cycling windows using 'C-x o',
@@ -64,116 +61,27 @@
 (when (version<= "28" emacs-version)
   (repeat-mode 1))
 
-;; This should not be needed for Emacs version 29.0.60 and higher.
-(unless (version<= "29.0.60" emacs-version)
-  (global-so-long-mode 1))
-
 ;; Highlight matching parentheses.
 (show-paren-mode 1)
 
-;;; CUSTOM FUNCTIONS
+;; Global keybinds
+(global-set-key (kbd "C-x k") . kill-current-buffer) ;; mapped to kill-buffer by default.
+(global-set-key (kbd "M-z") . zap-up-to-char) ;; mapped to zap-to-char by default:
+
 ;;; --------------------------------------------------------------------------
-;; Never kill scratch-buffer.
-(defun me/bury-scratch-buffer ()
-  (if (string= (buffer-name) "*scratch*")
-      (ignore (bury-buffer))
-    t))
-(add-hook 'kill-buffer-query-functions 'me/bury-scratch-buffer)
-
-;; You can achieve what this function does by pressing C-u C-SPC
-(defun me/back-to-mark ()
-  "Jump back to previous mark i.e after searching."
-  (interactive)
-  (set-mark-command 0))
-
-(defun me/dired-up-directory ()
-  "Move up directory and cleanup previously used buffer."
-  (interactive)
-  (let ((cb (current-buffer)))
-    (progn (dired-up-directory)
-	   (kill-buffer cb))))
-
-;;; BUILT-IN PACKAGES
-;;; --------------------------------------------------------------------------
-
 ;; Note that use-package is NOT a package manager but simply uses the one
 ;; provided by package.el when told to ensure that packages are installed. Here
 ;; we simply use the use-package macro to configure built-in packages in a
-;; declerative manner.
-(use-package emacs
-  :bind
-  ;; See: https://www.gnu.org/software/emacs/manual/html_node/elisp/Dotted-Pair-Notation.html
-  ;; for information on "dotted pair notation" i.e (foo . bar)
-  ;; or press 'C-h i' (to access the info-system) then use 'm' to navigate to:
-  ;; Elisp > Dotted Pair Notation
-  (:map global-map
-	("C-8" . backward-list)
-	("C-9" . forward-list)
-	("M-1" . delete-other-windows)
-	("M-2" . split-window-below)
-	("M-3" . split-window-right)
-	("M-4" . delete-window)
-	("s-r" . replace-string)
-	("M-z" . zap-up-to-char)
-	("C-x C-b" . ibuffer-other-window)
-	("C-x k" . kill-current-buffer)
-	("C-0" . me/back-to-mark)))
-
-;; Emacs Directory Editor 'C-x d'
-(use-package dired
-  :ensure nil
-  :config
-  (setq dired-recursive-copies t
-	dired-recursive-deletes t
-	dired-dwim-target t
-	delete-by-moving-to-trash t)
-  :bind
-  (:map dired-mode-map
-	("-" . me/dired-up-directory)
-	("e" . wdired-change-to-wdired-mode)))
-
-(use-package eshell
-  :ensure nil
-  :commands (eshell)
-  :config
-  (require 'esh-mode)
-  (defun my/eshell-clear ()
-    (interactive)
-    (eshell/clear-scrollback)
-    (eshell-emit-prompt))
-
-  (defun eshell/open (file) (find-file file))
-  :bind
-  (:map eshell-mode-map
-	("C-l" . my/eshell-clear)))
-
-;; LANGUAGES
-;; --------------------------------------------------------------------------
-(use-package sh-mode
-  :ensure nil
-  :commands shell-script-mode
-  :bind (:map sh-mode-map ("C-x C-e" . sh-execute-region)))
-
+;; declerative manner. For example, we could configure the org useing `use-package', note that
+;; this will cause org to be loaded only after you use any of the keybinds specified in the configuration
+;; below.
 (use-package org
-  :commands (org-agenda
-	     org-capture)
-
-  :config
-  (setq org-startup-indented t
-	org-startup-with-latex-preview t
-	org-pretty-entities t
-	org-ellipsis " …"
-  	org-export-preserve-breaks t
-	org-highlight-latex-and-related '(native)
-	org-src-fontify-natively t
-	org-fontify-quote-and-verse-blocks t
-	org-startup-folded nil
-	org-hide-leading-stars t
-	org-cycle-separator-lines -1
-	org-catch-invisible-edits 'error
-	org-ctrl-k-protect-subtree t)
-  :bind (:map org-mode-map
-	      ("C-c h" . consult-org-heading)))
+  :custom
+  (org-confirm-babel-evaluate nil)
+  :bind
+  (:map global-map
+	("C-c n n" . #'org-capture)
+	("C-c n a" . #'org-agenda)))
 
 
 ;;; EXTERNAL PACKAGES
@@ -204,7 +112,6 @@
   ;; :hook
   ;; (haskell-mode . eglot-ensure)
   ;; (rust-mode . eglot-ensure)
-
   :bind (:map eglot-mode-map
 	      ("C-c C-a" . eglot-code-actions)
 	      ("C-c C-f" . eglot-format-buffer)))
